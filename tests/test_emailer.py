@@ -23,6 +23,7 @@ def test_send_email(verified_address, ses_conn):
     send_email(
         from_address=verified_address,
         to_address=verified_address,
+        reply_to=verified_address,
         subject='test subject',
         message_html='<b>hi</b>')
     send_quota = ses_conn.get_send_quota()

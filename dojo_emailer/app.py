@@ -9,9 +9,8 @@ from dojo_emailer.scheduler import is_reminder_day
 from dojo_emailer.sessions import get_first_of_next_month
 
 # email settings
-FROM_ADDRESS = 'Dojo monthly reminder <reminder@ldnpydojo.org.uk>'
-TO_ADDRESS = 'Dojo discuss <discuss@ldnpydojo.org.uk>'
-TO_ADDRESS = FROM_ADDRESS
+DISCUSS_ADDRESS = 'Dojo discuss <discuss@ldnpydojo.org.uk>'
+REMINDER_ADDRESS = 'Dojo monthly reminder <reminder@ldnpydojo.org.uk>'
 SUBJECT = 'Monthly dojo reminder for {0:%B} {0:%Y}'
 TEMPLATE_FILENAME = 'reminder_template.html'
 
@@ -48,8 +47,11 @@ def send_email_endpoint():
     response = None
     if email_sent:
         response = emailer.send_email(
-            from_address=FROM_ADDRESS,
-            to_address=TO_ADDRESS,
+            # send from a unique address so we can whitelist it
+            from_address=REMINDER_ADDRESS,
+            to_address=DISCUSS_ADDRESS,
+            # set reply-to so we can reply to begin a discussion
+            reply_to=DISCUSS_ADDRESS,
             subject=SUBJECT.format(first_of_next_month),
             message_html=html)
     logging_data = {
